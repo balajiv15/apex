@@ -1,0 +1,29 @@
+public class TriggerAccount {
+    public static List<Account> newAccount = new List<Account>();
+    public static List<Account> oldAccount = new List<Account>();
+    public static Map<Id, Account> newMapAccount = new Map<Id, Account>();
+    public static Map<Id, Account> oldMapAccount = new Map<Id, Account>();
+  
+
+    public static void CreatContact(){
+         List<Contact> contactToInsert = new List<Contact>();
+        for(Account acc : newAccount){
+            Contact con = new Contact(FirstName = 'Info',
+                                      LastName = 'Default',
+                                      AccountId=acc.id
+                                     );
+            contactToInsert.add(con);
+            if(contactToInsert.size() == 0){
+                acc.Only_Default_Contact__c = True;
+            }
+            else{
+                  acc.Only_Default_Contact__c = False;
+            }
+        }
+        
+        if(!contactToInsert.isEmpty()){ 
+            insert contactToInsert; 
+         }
+    
+     }
+}
