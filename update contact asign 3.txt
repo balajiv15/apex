@@ -1,0 +1,13 @@
+trigger AccountTrigger on Account (after insert) {
+    if(trigger.isafter && trigger.isinsert) {
+		ContactNameUpdate.newContactCreated(Trigger.new);
+    }
+}
+
+
+
+trigger ContactTrigger on Contact (after insert) {
+    if(trigger.isafter && trigger.isinsert) {
+		ContactNameUpdate.updateCheckboxOnAccount(Trigger.new);
+    }
+}
