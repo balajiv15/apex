@@ -1,20 +1,20 @@
-public class updateopportunities on Account(after update) 
-{
-    Set<Id> accountIds = new Set<Id>();
+public class Handler_opportunityTrigger {
 
-    for(Account ac :new)
-    {
-         if(is_gold '< than $20k' true')
-              accounIds.add(ac.Id);
-    }
-
-     List<Opportunity> oppsToUpdate = new List<Opportunity>();
-
-     for(Opportunity opp : [select id, Amount field on Opportunity where AccountId in: accountIds])
-     {
-          opp.StageName='Closed - Cancelled';
-          oppsToUpdate.add(opp);
-     }
-
-     update oppsToUpdate;
+      public static void ammountonopp(list<opportunity>opp)
+      {
+           List<id>idlist=new List<id>();
+          for(opportunity:opp)
+          {
+              if(opp.Amount > 20000 & opp.AccountId !=null)
+              {
+                  idlist.add(op[.AccountId);
+              }
+          }
+          list<Account>acct=new list <Account>([Select Id from Account where id :idlist]);
+          for(Account a:acct)
+          {
+              a.is_gold__c=True;
+              update a;
+          }
+      }
 }
