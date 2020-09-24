@@ -1,20 +1,15 @@
-trigger updateopportunities on Account(after update) 
-{
-    Set<Id> accountIds = new Set<Id>();
+trigger Amount on Opportunity (after insert, after update) {
+List<Id> oppList = new List<Id>();
 
-    for(Account ac : Trigger.new)
-    {
-         if(is_gold '<  $20000' true')
-              accounIds.add(ac.Id);
-    }
+for (Opportunity opp: trigger.new) {
+if (opp.Amount > 20000 & opp.AccountId !=NULL) {
 
-     List<Opportunity> oppsToUpdate = new List<Opportunity>();
+oppList.add(opp.AccountId);
+}
+List<Account> acct = new List<Account>([Select Id from Account where Id :oppList ]);
 
-     for(Opportunity opp : [select id, Amount field on Opportunity where AccountId in: accountIds])
-     {
-          opp.StageName='Closed - Cancelled';
-          oppsToUpdate.add(opp);
-     }
-
-     update oppsToUpdate;
+for(Account: acc) {
+a.is_gold__c = TRUE;
+update ;
+}
 }
