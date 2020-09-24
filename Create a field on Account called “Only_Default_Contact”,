@@ -1,29 +1,40 @@
-public class TriggerAccount {
-    public static List<Account> newAccount = new List<Account>();
-    public static List<Account> oldAccount = new List<Account>();
-    public static Map<Id, Account> newMapAccount = new Map<Id, Account>();
-    public static Map<Id, Account> oldMapAccount = new Map<Id, Account>();
-  
+trigger createContact on Account (after insert) {
+//create list of accounts
+List<Contact> contList = new List<Contact>();
+for(Account acct: trigger.new) {
+Contact c = new Contact (LastName='Default', 
+                         FirstName ='Info', 
+                         Email= 'info@websitedomain.tld', 
+                         AccountId= acct.Id );
+       cntList.add(c);
+}
+if (!cntList.isEmpty()) {
+insert cntList;
+}
+}
 
-    public static void CreatContact(){
-         List<Contact> contactToInsert = new List<Contact>();
-        for(Account acc : newAccount){
-            Contact con = new Contact(FirstName = 'Info',
-                                      LastName = 'Default',
-                                      AccountId=acc.id
-                                     );
-            contactToInsert.add(con);
-            if(contactToInsert.size() == 0){
-                acc.Only_Default_Contact__c = True;
-            }
-            else{
-                  acc.Only_Default_Contact__c = False;
-            }
+trigger updateaccountss on Account (before and after insert) {
+
+     List<Id> account = new List<Id>();
+    for (Contact c : trigger.new){
+        account.add(c.AccountId);
+    }
+    List<Contact> contact = new List<Contact>([Select Id from Contact where AccountId IN:account]);
+    system.debug(' contact contact List: ' + cnt)
+    system.debug('total count of contacts: ' + totalCount)
+    List<Account> accountList = new List<Account>([Select Id from Account where Id IN:account]);
+    system.debug('accountList: ' + accountList);
+    if (totalCount == 1){
+        for (Account acc : accountList){
+            acct.Only_Default_Contact__c = TRUE;
+            update acc;
         }
-        
-        if(!contactToInsert.isEmpty()){ 
-            insert contactToInsert; 
-         }
-    
-     }
+    }
+    else if (totalCount > 1){
+        for (Account acc : accountList){
+            acct.Only_Default_Contact__c = False;
+            update acc;
+        }
+    }
+
 }
